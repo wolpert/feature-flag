@@ -11,6 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+/**
+ * A longer test that starts up an etcd process. But not really that long.
+ */
 public class EtcdEnablementLookupManagerIntegTest {
   @RegisterExtension
   public static final EtcdClusterExtension cluster = EtcdClusterExtension.builder()

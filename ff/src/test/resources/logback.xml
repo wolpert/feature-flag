@@ -23,9 +23,9 @@
         </encoder>
     </appender>
 
-    <logger name="org.svarm" level="TRACE"/>
+    <logger name="com.codeheadsystems" level="TRACE"/>
 
-    <root level="TRACE">
+    <root level="WARN">
         <appender-ref ref="STDOUT"/>
     </root>
 </configuration>
