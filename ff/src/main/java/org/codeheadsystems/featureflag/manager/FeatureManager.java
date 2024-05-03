@@ -7,9 +7,9 @@ import java.time.Duration;
 import java.util.concurrent.ForkJoinPool;
 import java.util.function.Supplier;
 import org.codeheadsystems.featureflag.factory.Enablement;
+import org.codeheadsystems.featureflag.factory.EnablementFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.codeheadsystems.featureflag.factory.EnablementFactory;
 
 /**
  * The type Enablement manager.
@@ -25,7 +25,7 @@ public class FeatureManager {
   /**
    * Instantiates a new Feature manager.
    *
-   * @param enablementFactory       the feature factory
+   * @param enablementFactory    the feature factory
    * @param featureLookupManager the feature lookup manager
    */
   public FeatureManager(final EnablementFactory enablementFactory,
