@@ -8,7 +8,7 @@ jetcd = "0.8.0"
 junit-jupiter = "5.10.1"
 mokito = '5.10.0'
 logback = '1.4.14'
-slf4j = '2.0.12'
+slf4j = '2.0.13'
 testcontainers = '1.19.5'
 
 [libraries]
