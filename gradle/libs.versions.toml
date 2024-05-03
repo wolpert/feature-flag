@@ -4,6 +4,7 @@
 [versions]
 assertj = "3.25.3"
 guava = "33.1.0-jre"
+jetcd = "0.8.0"
 junit-jupiter = "5.10.1"
 mokito = '5.10.0'
 logback = '1.4.14'
@@ -12,6 +13,8 @@ slf4j = '2.0.12'
 [libraries]
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
+jetcd = { module = "io.etcd:jetcd-core", version.ref = "jetcd" }
+jetcd-test = { module = "io.etcd:jetcd-test", version.ref = "jetcd" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 logback-core = { module = "ch.qos.logback:logback-core", version.ref = "logback" }
