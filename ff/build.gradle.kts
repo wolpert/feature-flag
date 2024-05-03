@@ -27,7 +27,6 @@ dependencies {
 
     testImplementation(libs.bundles.logback)
     testImplementation(libs.bundles.testing)
-    testImplementation(libs.jetcd.test)
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
