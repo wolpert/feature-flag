@@ -19,6 +19,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +35,6 @@ class EtcdEnablementLookupManagerTest {
   private static final String FEATURE_ID = "featureId";
 
   private static final String PREAMBLE = "p";
-  private static final String VALUE = "value";
 
   @Mock private Client client;
   @Mock private KV kv;
@@ -90,7 +90,7 @@ class EtcdEnablementLookupManagerTest {
     when(kv.put(byteSequenceArgumentCaptor.capture(), byteSequenceArgumentCaptor.capture())).thenReturn(putResponseCompletableFuture);
     etcdFeatureLookupManager.setPercentage(FEATURE_ID, 0.5);
     verify(putResponseCompletableFuture).get();
-    List<String> values = byteSequenceArgumentCaptor.getAllValues().stream().map(Objects::toString).toList();
+    List<String> values = byteSequenceArgumentCaptor.getAllValues().stream().map(Objects::toString).collect(Collectors.toList());
     assertThat(values).containsExactly(PREAMBLE + "_" + NAMESPACE + "/" + FEATURE_ID, "0.5");
     verify(putResponseCompletableFuture).get();
   }
@@ -101,7 +101,7 @@ class EtcdEnablementLookupManagerTest {
     when(kv.delete(byteSequenceArgumentCaptor.capture())).thenReturn(deleteResponseCompletableFuture);
     etcdFeatureLookupManager.deletePercentage(FEATURE_ID);
     verify(deleteResponseCompletableFuture).get();
-    List<String> values = byteSequenceArgumentCaptor.getAllValues().stream().map(Objects::toString).toList();
+    List<String> values = byteSequenceArgumentCaptor.getAllValues().stream().map(Objects::toString).collect(Collectors.toList());
     assertThat(values).containsExactly(PREAMBLE + "_" + NAMESPACE + "/" + FEATURE_ID);
   }
 }
