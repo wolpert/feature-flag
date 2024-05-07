@@ -3,8 +3,10 @@
 
 [versions]
 assertj = "3.25.3"
+awsSDK2 = "2.25.46"
 guava = "33.2.0-jre"
 ddblocal = "2.4.0"
+immutables = '2.10.1'
 jetcd = "0.8.0"
 junit-jupiter = "5.10.2"
 mokito = '5.11.0'
@@ -14,8 +16,11 @@ testcontainers = '1.19.7'
 
 [libraries]
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+aws-sdk2-ddb = { module = "software.amazon.awssdk:dynamodb", version.ref = "awsSDK2" }
 ddblocal = { module = "com.amazonaws:DynamoDBLocal", version.ref = "ddblocal" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
+immutables-value = { module = "org.immutables:value", version.ref = "immutables" }
+immutables-annotations = { module = "org.immutables:value-annotations", version.ref = "immutables" }
 jetcd = { module = "io.etcd:jetcd-core", version.ref = "jetcd" }
 jetcd-test = { module = "io.etcd:jetcd-test", version.ref = "jetcd" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
