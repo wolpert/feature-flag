@@ -56,6 +56,7 @@ java {
 }
 
 tasks.named<Test>("test") {
+    java.toolchain.languageVersion = JavaLanguageVersion.of(17)
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }

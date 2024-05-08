@@ -32,6 +32,12 @@ dependencies {
 * Current libraries are overly complicated or spring-based. (ff4j)
 * Too many bells ans whistles and leaky abstractions. 
 
+## Java Version Notice
+
+These libraries are compiled with Java 21 but supports class files for Java 11.
+However, DynamoDB requires Java 17 for testing due to using DynamoDBLocal
+jars internally.
+
 ## TODO
 1. Generic CLI would be nice.
-2. Add in DDB and SQL support.
+2. Add in SQL support.
