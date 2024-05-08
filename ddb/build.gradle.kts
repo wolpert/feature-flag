@@ -38,6 +38,7 @@ dependencies {
     compileOnly(libs.immutables.annotations)
     annotationProcessor(libs.immutables.value)
 
+    testImplementation(project(":test"))
     testImplementation(libs.bundles.logback)
     testImplementation(libs.bundles.testing)
     testImplementation(libs.database.test)

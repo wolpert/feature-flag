@@ -28,6 +28,7 @@ dependencies {
     implementation(libs.slf4j.api)
     implementation(libs.jetcd)
 
+    testImplementation(project(":test"))
     testImplementation(libs.bundles.logback)
     testImplementation(libs.bundles.testing)
     testImplementation(libs.jetcd.test)
