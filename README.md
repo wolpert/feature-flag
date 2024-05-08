@@ -21,8 +21,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.codeheadsystems:feature-flag:1.0.0'
-    implementation 'com.codeheadsystems:feature-flag-etcd:1.0.0'
+    implementation 'com.codeheadsystems:feature-flag:1.0.1'
+    implementation 'com.codeheadsystems:feature-flag-etcd:1.0.1'
+    implementation 'com.codeheadsystems:feature-flag-ddb:1.0.1'
 }
 ```
 

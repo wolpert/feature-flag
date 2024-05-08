@@ -18,7 +18,13 @@ repositories {
     mavenCentral()
 }
 
+val dynamodb by configurations.creating
+
 dependencies {
+
+    // DynamoDB testing
+    dynamodb(fileTree("lib") { include(listOf("*.dylib", "*.so", "*.dll")) })
+    dynamodb(libs.ddblocal)
 
     // This dependency is exported to consumers, that is to say found on their compile classpath.
     //api(libs.commons.math3)
@@ -34,6 +40,7 @@ dependencies {
 
     testImplementation(libs.bundles.logback)
     testImplementation(libs.bundles.testing)
+    testImplementation(libs.database.test)
     testImplementation(libs.ddblocal)
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
@@ -49,6 +56,18 @@ java {
 
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
+}
+
+tasks.register("copyNativeDeps", Copy::class.java) {
+    from(configurations.runtimeClasspath.get() + configurations.testRuntimeClasspath.get()) {
+        include("*.dll", "*.dylib", "*.so")
+    }.into("build/libs")
+}
+
+tasks.named<Test>("test") {
+    dependsOn("copyNativeDeps")
+    systemProperty("java.library.path", "build/libs")
     useJUnitPlatform()
 }
 
@@ -109,4 +128,12 @@ tasks.javadoc {
     if (JavaVersion.current().isJava9Compatible) {
         (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
     }
+}
+
+tasks.publish {
+    dependsOn("copyNativeDeps")
+}
+
+tasks.getByName("generateMetadataFileForMavenJavaPublication") {
+    dependsOn("copyNativeDeps")
 }

@@ -71,6 +71,7 @@ public class DdbFeatureLookupManager implements FeatureLookupManager {
         .key(getHashLookup(featureId))
         .tableName(dbConfiguration.tableName())
         .build();
+    dbClient.deleteItem(request);
     LOGGER.trace("deletePercentage({})", featureId);
   }
 
