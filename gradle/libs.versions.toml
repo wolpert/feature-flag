@@ -3,7 +3,7 @@
 
 [versions]
 assertj = "3.25.3"
-awsSDK2 = "2.25.46"
+awsSDK2 = "2.25.47"
 guava = "33.2.0-jre"
 ddblocal = "2.4.0"
 immutables = '2.10.1'
