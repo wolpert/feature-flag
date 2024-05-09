@@ -3,11 +3,11 @@ package org.codeheadsystems.featureflag.manager;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import java.time.Duration;
-import java.util.concurrent.ForkJoinPool;
 import java.util.function.Supplier;
 import org.codeheadsystems.featureflag.factory.Enablement;
 import org.codeheadsystems.featureflag.factory.EnablementFactory;
+import org.codeheadsystems.featureflag.model.FeatureManagerConfiguration;
+import org.codeheadsystems.featureflag.model.ImmutableFeatureManagerConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,20 +28,21 @@ public class FeatureManager {
    * @param enablementFactory    the feature factory
    * @param featureLookupManager the feature lookup manager
    */
-  public FeatureManager(final EnablementFactory enablementFactory,
-                        final FeatureLookupManager featureLookupManager) {
+  private FeatureManager(final EnablementFactory enablementFactory,
+                         final FeatureLookupManager featureLookupManager,
+                         final FeatureManagerConfiguration configuration) {
+    LOGGER.info("FeatureManager({},{},{})", configuration, featureLookupManager, enablementFactory);
     this.enablementFactory = enablementFactory;
     this.featureLookupManager = featureLookupManager;
     this.featureEnablementCache = CacheBuilder.newBuilder()
-        .maximumSize(100) // oh god, like we will have 100 features?
-        .refreshAfterWrite(Duration.ofSeconds(60)) // refresh from source every 60seconds
-        .expireAfterAccess(Duration.ofSeconds(600)) // expire after 600 seconds of inactivity
+        .maximumSize(configuration.cacheMaximumSize()) // oh god, like we will have 100 features?
+        .refreshAfterWrite(configuration.cacheRefreshAfterWrite()) // refresh from source every 60seconds
+        .expireAfterAccess(configuration.cacheExpireAfterAccess()) // expire after 600 seconds of inactivity
         .removalListener(notification -> LOGGER.trace("removalListener({})", notification.getKey()))
         //.recordStats()
         .build(CacheLoader.asyncReloading(
             CacheLoader.from(this::lookup),
-            ForkJoinPool.commonPool()));
-    LOGGER.info("FeatureManager({},{})", featureLookupManager, enablementFactory);
+            configuration.cacheLoaderExecutor()));
   }
 
   private Enablement lookup(String featureId) {
@@ -83,6 +84,66 @@ public class FeatureManager {
    */
   public void invalidate(String featureId) {
     featureEnablementCache.invalidate(featureId);
+  }
+
+  /**
+   * The type Builder.
+   */
+  public static class Builder {
+    private EnablementFactory enablementFactory;
+    private FeatureLookupManager featureLookupManager;
+    private FeatureManagerConfiguration configuration;
+
+    /**
+     * With enablement factory builder. Required to be called.
+     *
+     * @param enablementFactory the enablement factory
+     * @return the builder
+     */
+    public Builder withEnablementFactory(final EnablementFactory enablementFactory) {
+      this.enablementFactory = enablementFactory;
+      return this;
+    }
+
+    /**
+     * With feature lookup manager builder. Required to be called.
+     *
+     * @param featureLookupManager the feature lookup manager
+     * @return the builder
+     */
+    public Builder withFeatureLookupManager(final FeatureLookupManager featureLookupManager) {
+      this.featureLookupManager = featureLookupManager;
+      return this;
+    }
+
+    /**
+     * With configuration builder. Optional to be called.
+     *
+     * @param configuration the configuration
+     * @return the builder
+     */
+    public Builder withConfiguration(final FeatureManagerConfiguration configuration) {
+      this.configuration = configuration;
+      return this;
+    }
+
+    /**
+     * Build feature manager.
+     *
+     * @return the feature manager
+     */
+    public FeatureManager build() {
+      if (enablementFactory == null) {
+        throw new IllegalStateException("Missing required fields: enablementFactory");
+      }
+      if (featureLookupManager == null) {
+        throw new IllegalStateException("Missing required fields: featureLookupManager");
+      }
+      final FeatureManagerConfiguration buildConfig = this.configuration == null
+          ? ImmutableFeatureManagerConfiguration.builder().build()
+          : this.configuration;
+      return new FeatureManager(enablementFactory, featureLookupManager, buildConfig);
+    }
   }
 
 }

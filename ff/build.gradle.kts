@@ -27,6 +27,10 @@ dependencies {
     implementation(libs.slf4j.api)
     implementation(libs.guava)
 
+    // Immutables
+    compileOnly(libs.immutables.annotations)
+    annotationProcessor(libs.immutables.value)
+
     testImplementation(libs.bundles.logback)
     testImplementation(libs.bundles.testing)
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
