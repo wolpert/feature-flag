@@ -3,6 +3,7 @@ package org.codeheadsystems.featureflag.manager;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import java.time.Duration;
 import java.util.function.Supplier;
 import org.codeheadsystems.featureflag.factory.Enablement;
 import org.codeheadsystems.featureflag.factory.EnablementFactory;
@@ -30,16 +31,12 @@ public class FeatureManager {
    */
   private FeatureManager(final EnablementFactory enablementFactory,
                          final FeatureLookupManager featureLookupManager,
-                         final FeatureManagerConfiguration configuration) {
+                         final FeatureManagerConfiguration configuration,
+                         final CacheBuilder<String, Enablement> cacheBuilder) {
     LOGGER.info("FeatureManager({},{},{})", configuration, featureLookupManager, enablementFactory);
     this.enablementFactory = enablementFactory;
     this.featureLookupManager = featureLookupManager;
-    this.featureEnablementCache = CacheBuilder.newBuilder()
-        .maximumSize(configuration.cacheMaximumSize()) // oh god, like we will have 100 features?
-        .refreshAfterWrite(configuration.cacheRefreshAfterWrite()) // refresh from source every 60seconds
-        .expireAfterAccess(configuration.cacheExpireAfterAccess()) // expire after 600 seconds of inactivity
-        .removalListener(notification -> LOGGER.trace("removalListener({})", notification.getKey()))
-        //.recordStats()
+    this.featureEnablementCache = cacheBuilder
         .build(CacheLoader.asyncReloading(
             CacheLoader.from(this::lookup),
             configuration.cacheLoaderExecutor()));
@@ -93,6 +90,15 @@ public class FeatureManager {
     private EnablementFactory enablementFactory;
     private FeatureLookupManager featureLookupManager;
     private FeatureManagerConfiguration configuration;
+    private CacheBuilder<String, Enablement> cacheBuilder;
+
+    private static CacheBuilder<String, Enablement> getDefaultCacheBuilder() {
+      return CacheBuilder.newBuilder()
+          .maximumSize(100) // oh god, like we will have 100 features?
+          .refreshAfterWrite(Duration.ofSeconds(60)) // refresh from source every 60seconds
+          .expireAfterAccess(Duration.ofSeconds(600)) // expire after 600 seconds of inactivity
+          .removalListener(notification -> LOGGER.trace("removalListener({})", notification.getKey()));
+    }
 
     /**
      * With enablement factory builder. Required to be called.
@@ -128,6 +134,17 @@ public class FeatureManager {
     }
 
     /**
+     * With configuration builder. Optional to be called.
+     *
+     * @param cacheBuilder the configuration
+     * @return the builder
+     */
+    public Builder withCacheBuilder(final CacheBuilder<String, Enablement> cacheBuilder) {
+      this.cacheBuilder = cacheBuilder;
+      return this;
+    }
+
+    /**
      * Build feature manager.
      *
      * @return the feature manager
@@ -142,7 +159,10 @@ public class FeatureManager {
       final FeatureManagerConfiguration buildConfig = this.configuration == null
           ? ImmutableFeatureManagerConfiguration.builder().build()
           : this.configuration;
-      return new FeatureManager(enablementFactory, featureLookupManager, buildConfig);
+      final CacheBuilder<String, Enablement> buildCacheBuilder = this.cacheBuilder == null
+          ? getDefaultCacheBuilder()
+          : this.cacheBuilder;
+      return new FeatureManager(enablementFactory, featureLookupManager, buildConfig, buildCacheBuilder);
     }
   }
 
