@@ -67,12 +67,12 @@ public class DdbFeatureLookupManager implements FeatureLookupManager {
 
   @Override
   public void deletePercentage(final String featureId) {
+    LOGGER.trace("deletePercentage({})", featureId);
     final DeleteItemRequest request = DeleteItemRequest.builder()
         .key(getHashLookup(featureId))
         .tableName(dbConfiguration.tableName())
         .build();
     dbClient.deleteItem(request);
-    LOGGER.trace("deletePercentage({})", featureId);
   }
 
   private Map<String, AttributeValue> getHashLookup(final String featureId) {

@@ -18,19 +18,23 @@ repositories {
     mavenCentral()
 }
 
+
 dependencies {
 
+    // This dependency is exported to consumers, that is to say found on their compile classpath.
     api(project(":ff"))
 
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation(libs.slf4j.api)
-    implementation(libs.aws.sdk2.ddb)
 
     // Immutables
     compileOnly(libs.immutables.annotations)
     annotationProcessor(libs.immutables.value)
 
+    testImplementation(project(":test"))
+    testImplementation(libs.bundles.logback)
     testImplementation(libs.bundles.testing)
+    testImplementation(libs.database.test)
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
@@ -43,10 +47,15 @@ java {
     withSourcesJar()
 }
 
+
+tasks.named<Test>("test") {
+    useJUnitPlatform()
+}
+
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
-            artifactId = "feature-flag-ddb"
+            artifactId = "feature-flag-sql"
             from(components["java"])
             versionMapping {
                 usage("java-api") {
@@ -57,8 +66,8 @@ publishing {
                 }
             }
             pom {
-                name = "Feature Flag DDB"
-                description = "Core Feature Flag library supporting DynamoDB"
+                name = "Feature Flag SQL"
+                description = "Core Feature Flag library supporting SQL"
                 url = "https://github.com/wolpert/feature-flag"
                 licenses {
                     license {
@@ -101,3 +110,4 @@ tasks.javadoc {
         (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
     }
 }
+
