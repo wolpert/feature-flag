@@ -4,6 +4,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import java.time.Duration;
+import java.util.Objects;
 import java.util.function.Supplier;
 import org.codeheadsystems.featureflag.factory.Enablement;
 import org.codeheadsystems.featureflag.factory.EnablementFactory;
@@ -26,20 +27,16 @@ public class FeatureManager {
   /**
    * Instantiates a new Feature manager.
    *
-   * @param enablementFactory    the feature factory
-   * @param featureLookupManager the feature lookup manager
+   * @param builder The builder user to create this.
    */
-  private FeatureManager(final EnablementFactory enablementFactory,
-                         final FeatureLookupManager featureLookupManager,
-                         final FeatureManagerConfiguration configuration,
-                         final CacheBuilder<String, Enablement> cacheBuilder) {
-    LOGGER.info("FeatureManager({},{},{})", configuration, featureLookupManager, enablementFactory);
-    this.enablementFactory = enablementFactory;
-    this.featureLookupManager = featureLookupManager;
-    this.featureEnablementCache = cacheBuilder
+  private FeatureManager(final Builder builder) {
+    this.enablementFactory = builder.enablementFactory;
+    this.featureLookupManager = builder.featureLookupManager;
+    this.featureEnablementCache = builder.cacheBuilder
         .build(CacheLoader.asyncReloading(
             CacheLoader.from(this::lookup),
-            configuration.cacheLoaderExecutor()));
+            builder.configuration.cacheLoaderExecutor()));
+    LOGGER.info("FeatureManager({},{},{})", builder.configuration, featureLookupManager, enablementFactory);
   }
 
   private Enablement lookup(String featureId) {
@@ -150,19 +147,11 @@ public class FeatureManager {
      * @return the feature manager
      */
     public FeatureManager build() {
-      if (enablementFactory == null) {
-        throw new IllegalStateException("Missing required fields: enablementFactory");
-      }
-      if (featureLookupManager == null) {
-        throw new IllegalStateException("Missing required fields: featureLookupManager");
-      }
-      final FeatureManagerConfiguration buildConfig = this.configuration == null
-          ? ImmutableFeatureManagerConfiguration.builder().build()
-          : this.configuration;
-      final CacheBuilder<String, Enablement> buildCacheBuilder = this.cacheBuilder == null
-          ? getDefaultCacheBuilder()
-          : this.cacheBuilder;
-      return new FeatureManager(enablementFactory, featureLookupManager, buildConfig, buildCacheBuilder);
+      Objects.requireNonNull(enablementFactory, "Missing required fields: enablementFactory");
+      Objects.requireNonNull(featureLookupManager, "Missing required fields: featureLookupManager");
+      configuration = Objects.requireNonNullElse(configuration, ImmutableFeatureManagerConfiguration.builder().build());
+      cacheBuilder = Objects.requireNonNullElse(cacheBuilder, getDefaultCacheBuilder());
+      return new FeatureManager(this);
     }
   }
 

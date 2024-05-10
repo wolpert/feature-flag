@@ -52,3 +52,4 @@ testcontainers-postgres = { module = "org.testcontainers:postgresql", version.re
 [bundles]
 logback = ["logback-classic", "logback-core"]
 testing = ["mockito-core", "mockito-junit-jupiter", "assertj", "junit-jupiter"]
+jdbi = ["jdbi-core", "jdbi-caffeine", "jdbi-noopcache",  "jdbi-postgres", "jdbi-sqlobject"]

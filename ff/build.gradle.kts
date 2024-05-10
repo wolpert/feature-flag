@@ -26,6 +26,7 @@ dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation(libs.slf4j.api)
     implementation(libs.guava)
+    implementation(libs.bundles.jdbi)
 
     // Immutables
     compileOnly(libs.immutables.annotations)
@@ -33,6 +34,9 @@ dependencies {
 
     testImplementation(libs.bundles.logback)
     testImplementation(libs.bundles.testing)
+    testImplementation(libs.pgjdbc)
+    testImplementation(libs.testcontainers)
+    testImplementation(libs.testcontainers.postgres)
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
