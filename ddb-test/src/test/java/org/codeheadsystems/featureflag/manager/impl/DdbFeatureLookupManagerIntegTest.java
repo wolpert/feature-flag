@@ -23,7 +23,7 @@ class DdbFeatureLookupManagerIntegTest extends FeatureLookupManagerIntegTest {
   }
 
   @Override
-  FeatureLookupManager manager() {
+  public FeatureLookupManager manager() {
     return new DdbFeatureLookupManager(DB_CONFIGURATION, dbClient);
   }
 

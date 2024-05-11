@@ -20,7 +20,7 @@ public abstract class FeatureLookupManagerIntegTest {
    *
    * @return the feature lookup manager
    */
-  abstract FeatureLookupManager manager();
+  abstract public FeatureLookupManager manager();
 
 
   /**

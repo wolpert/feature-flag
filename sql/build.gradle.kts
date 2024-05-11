@@ -36,6 +36,9 @@ dependencies {
     testImplementation(libs.bundles.logback)
     testImplementation(libs.bundles.testing)
     testImplementation(libs.database.test)
+
+    testImplementation(libs.liquibase.core)
+    testImplementation(libs.hsqldb)
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

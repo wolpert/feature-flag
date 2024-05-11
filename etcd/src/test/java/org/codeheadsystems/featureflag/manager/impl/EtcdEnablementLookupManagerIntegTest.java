@@ -28,7 +28,7 @@ public class EtcdEnablementLookupManagerIntegTest extends FeatureLookupManagerIn
   }
 
   @Override
-  FeatureLookupManager manager() {
+  public FeatureLookupManager manager() {
     return new EtcdFeatureLookupManager(client, "test");
   }
 

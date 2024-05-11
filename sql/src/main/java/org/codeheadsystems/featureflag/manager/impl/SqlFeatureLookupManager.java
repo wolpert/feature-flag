@@ -1,4 +1,4 @@
-package org.codeheadsystems.featureflag.factory.impl;
+package org.codeheadsystems.featureflag.manager.impl;
 
 import java.util.Objects;
 import java.util.Optional;
