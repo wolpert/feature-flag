@@ -48,14 +48,6 @@ publishing {
         create<MavenPublication>("mavenJava") {
             artifactId = "feature-flag-ddb"
             from(components["java"])
-            versionMapping {
-                usage("java-api") {
-                    fromResolutionOf("runtimeClasspath")
-                }
-                usage("java-runtime") {
-                    fromResolutionResult()
-                }
-            }
             pom {
                 name = "Feature Flag DDB"
                 description = "Core Feature Flag library supporting DynamoDB"

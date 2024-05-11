@@ -59,14 +59,6 @@ publishing {
         create<MavenPublication>("mavenJava") {
             artifactId = "feature-flag"
             from(components["java"])
-            versionMapping {
-                usage("java-api") {
-                    fromResolutionOf("runtimeClasspath")
-                }
-                usage("java-runtime") {
-                    fromResolutionResult()
-                }
-            }
             pom {
                 name = "Feature Flag"
                 description = "Core Feature Flag library"

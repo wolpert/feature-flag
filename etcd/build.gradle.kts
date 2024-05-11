@@ -54,14 +54,6 @@ publishing {
         create<MavenPublication>("mavenJava") {
             artifactId = "feature-flag-etcd"
             from(components["java"])
-            versionMapping {
-                usage("java-api") {
-                    fromResolutionOf("runtimeClasspath")
-                }
-                usage("java-runtime") {
-                    fromResolutionResult()
-                }
-            }
             pom {
                 name = "Feature Flag Etcd"
                 description = "Core Feature Flag library supporting Etcd"
