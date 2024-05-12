@@ -5,6 +5,7 @@
 assertj = "3.25.3"
 awsSDK2 = "2.25.49"
 codehead-database-test = "1.0.3"
+codehead-metrics = "1.0.4"
 guava = "33.2.0-jre"
 ddblocal = "2.4.0"
 hsqldb = '2.7.2'
@@ -13,6 +14,8 @@ jetcd = "0.8.0"
 jdbi = '3.45.1'
 junit-jupiter = "5.10.2"
 liquibase = '4.27.0'
+micrometer = '1.12.5'
+metrics = '4.2.25'
 mokito = '5.11.0'
 logback = '1.5.6'
 pgjdbc = '42.7.3'
@@ -24,6 +27,8 @@ assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 aws-sdk2-ddb = { module = "software.amazon.awssdk:dynamodb", version.ref = "awsSDK2" }
 database-test = { module = "com.codeheadsystems:database-test", version.ref = "codehead-database-test" }
 ddblocal = { module = "com.amazonaws:DynamoDBLocal", version.ref = "ddblocal" }
+codehead-metrics = { module = "com.codeheadsystems:metrics", version.ref = "codehead-metrics" }
+codehead-metrics-test = { module = "com.codeheadsystems:metrics-test", version.ref = "codehead-metrics" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 hsqldb = { module = "org.hsqldb:hsqldb", version.ref = "hsqldb" }
 immutables-value = { module = "org.immutables:value", version.ref = "immutables" }
@@ -33,17 +38,14 @@ jetcd-test = { module = "io.etcd:jetcd-test", version.ref = "jetcd" }
 jdbi-core = {module = "org.jdbi:jdbi3-core", version.ref = "jdbi" }
 jdbi-caffeine = {module = "org.jdbi:jdbi3-caffeine-cache", version.ref = "jdbi" }
 jdbi-noopcache = {module = "org.jdbi:jdbi3-noop-cache", version.ref = "jdbi" }
-jdbi-testing = {module = "org.jdbi:jdbi3-testing", version.ref = "jdbi" }
-jdbi-testcontainers = {module = "org.jdbi:jdbi3-testcontainers", version.ref = "jdbi" }
-jdbi-guava = {module = "org.jdbi:jdbi3-guava", version.ref = "jdbi" }
-jdbi-jackson2 = {module = "org.jdbi:jdbi3-jackson2", version.ref = "jdbi" }
 jdbi-postgres = {module = "org.jdbi:jdbi3-postgres", version.ref = "jdbi" }
 jdbi-sqlobject = {module = "org.jdbi:jdbi3-sqlobject", version.ref = "jdbi" }
-jdbi-bom = {module = "org.jdbi:jdbi3-bom", version.ref = "jdbi" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
 liquibase-core = { module = "org.liquibase:liquibase-core", version.ref = "liquibase" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 logback-core = { module = "ch.qos.logback:logback-core", version.ref = "logback" }
+metrics-core = { module = "io.dropwizard.metrics:metrics-core", version.ref = "metrics" }
+micrometer-core = { module = "io.micrometer:micrometer-core", version.ref = "micrometer" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mokito" }
 mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mokito" }
 pgjdbc = { module = "org.postgresql:postgresql", version.ref = "pgjdbc" }

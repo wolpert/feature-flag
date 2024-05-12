@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 import org.codeheadsystems.featureflag.factory.EnablementFactory;
+import org.codeheadsystems.featureflag.manager.impl.FeatureManagerImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,11 +24,11 @@ class EnablementManagerTest {
   @Mock private FeatureLookupManager featureLookupManager;
   @Mock private EnablementFactory enablementFactory;
 
-  private FeatureManager featureManager;
+  private FeatureManagerImpl featureManager;
 
   @BeforeEach
   void setUpFeatureManager() {
-    featureManager = new FeatureManager.Builder()
+    featureManager = (FeatureManagerImpl) new FeatureManager.Builder()
         .withFeatureLookupManager(featureLookupManager)
         .withEnablementFactory(enablementFactory)
         .build();

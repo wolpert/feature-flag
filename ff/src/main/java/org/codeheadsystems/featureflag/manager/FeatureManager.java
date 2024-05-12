@@ -1,50 +1,22 @@
 package org.codeheadsystems.featureflag.manager;
 
 import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.function.Supplier;
 import org.codeheadsystems.featureflag.factory.Enablement;
 import org.codeheadsystems.featureflag.factory.EnablementFactory;
+import org.codeheadsystems.featureflag.manager.impl.FeatureManagerImpl;
 import org.codeheadsystems.featureflag.model.FeatureManagerConfiguration;
 import org.codeheadsystems.featureflag.model.ImmutableFeatureManagerConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The type Enablement manager.
+ * The interface Feature manager.
  */
-public class FeatureManager {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(FeatureManager.class);
-
-  private final EnablementFactory enablementFactory;
-  private final FeatureLookupManager featureLookupManager;
-  private final LoadingCache<String, Enablement> featureEnablementCache;
-
-  /**
-   * Instantiates a new Feature manager.
-   *
-   * @param builder The builder user to create this.
-   */
-  private FeatureManager(final Builder builder) {
-    this.enablementFactory = builder.enablementFactory;
-    this.featureLookupManager = builder.featureLookupManager;
-    this.featureEnablementCache = builder.cacheBuilder
-        .build(CacheLoader.asyncReloading(
-            CacheLoader.from(this::lookup),
-            builder.configuration.cacheLoaderExecutor()));
-    LOGGER.info("FeatureManager({},{},{})", builder.configuration, featureLookupManager, enablementFactory);
-  }
-
-  private Enablement lookup(String featureId) {
-    LOGGER.info("lookup({})", featureId);
-    return featureLookupManager.lookupPercentage(featureId)
-        .map(enablementFactory::generate)
-        .orElseGet(enablementFactory::disabledFeature);
-  }
+public interface FeatureManager {
 
   /**
    * Is enabled boolean.
@@ -53,41 +25,38 @@ public class FeatureManager {
    * @param discriminator the discriminator
    * @return the boolean
    */
-  public boolean isEnabled(String featureId, String discriminator) {
-    return featureEnablementCache.getUnchecked(featureId).enabled(discriminator);
-  }
+  boolean isEnabled(String featureId, String discriminator);
 
   /**
-   * If enabled else t.
+   * The interface Decorator.
    *
-   * @param <T>           the type parameter
-   * @param featureId     the feature id
-   * @param discriminator the discriminator
-   * @param ifEnabled     the if enabled
-   * @param ifDisabled    the if disabled
-   * @return the t
+   * @param <T> the type parameter
    */
-  public <T> T ifEnabledElse(String featureId, String discriminator, Supplier<T> ifEnabled, Supplier<T> ifDisabled) {
-    return isEnabled(featureId, discriminator) ? ifEnabled.get() : ifDisabled.get();
-  }
+  interface Decorator<T> {
 
-  /**
-   * Invalidate the feature id in the cache.
-   *
-   * @param featureId the feature id
-   */
-  public void invalidate(String featureId) {
-    featureEnablementCache.invalidate(featureId);
+    /**
+     * Decorate t.
+     *
+     * @param target the target
+     * @return the t
+     */
+    T decorate(T target);
+
   }
 
   /**
    * The type Builder.
    */
-  public static class Builder {
+  class Builder {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(FeatureManager.class);
+
     private EnablementFactory enablementFactory;
     private FeatureLookupManager featureLookupManager;
     private FeatureManagerConfiguration configuration;
     private CacheBuilder<String, Enablement> cacheBuilder;
+    private List<Decorator<FeatureManager>> featureManagerDecorator = new ArrayList<>();
+    private List<Decorator<FeatureLookupManager>> featureLookupManagerDecorator = new ArrayList<>();
 
     private static CacheBuilder<String, Enablement> getDefaultCacheBuilder() {
       return CacheBuilder.newBuilder()
@@ -98,12 +67,34 @@ public class FeatureManager {
     }
 
     /**
+     * With feature manager decorator builder.
+     *
+     * @param decorator the decorator
+     * @return the builder
+     */
+    public Builder withFeatureManagerDecorator(Decorator<FeatureManager> decorator) {
+      featureManagerDecorator.add(decorator);
+      return this;
+    }
+
+    /**
+     * Feature lookup manager decorator builder.
+     *
+     * @param decorator the decorator
+     * @return the builder
+     */
+    public Builder featureLookupManagerDecorator(Decorator<FeatureLookupManager> decorator) {
+      featureLookupManagerDecorator.add(decorator);
+      return this;
+    }
+
+    /**
      * With enablement factory builder. Required to be called.
      *
      * @param enablementFactory the enablement factory
      * @return the builder
      */
-    public Builder withEnablementFactory(final EnablementFactory enablementFactory) {
+    public FeatureManagerImpl.Builder withEnablementFactory(final EnablementFactory enablementFactory) {
       this.enablementFactory = enablementFactory;
       return this;
     }
@@ -114,7 +105,7 @@ public class FeatureManager {
      * @param featureLookupManager the feature lookup manager
      * @return the builder
      */
-    public Builder withFeatureLookupManager(final FeatureLookupManager featureLookupManager) {
+    public FeatureManagerImpl.Builder withFeatureLookupManager(final FeatureLookupManager featureLookupManager) {
       this.featureLookupManager = featureLookupManager;
       return this;
     }
@@ -125,7 +116,7 @@ public class FeatureManager {
      * @param configuration the configuration
      * @return the builder
      */
-    public Builder withConfiguration(final FeatureManagerConfiguration configuration) {
+    public FeatureManagerImpl.Builder withConfiguration(final FeatureManagerConfiguration configuration) {
       this.configuration = configuration;
       return this;
     }
@@ -136,7 +127,7 @@ public class FeatureManager {
      * @param cacheBuilder the configuration
      * @return the builder
      */
-    public Builder withCacheBuilder(final CacheBuilder<String, Enablement> cacheBuilder) {
+    public FeatureManagerImpl.Builder withCacheBuilder(final CacheBuilder<String, Enablement> cacheBuilder) {
       this.cacheBuilder = cacheBuilder;
       return this;
     }
@@ -148,10 +139,57 @@ public class FeatureManager {
      */
     public FeatureManager build() {
       Objects.requireNonNull(enablementFactory, "Missing required fields: enablementFactory");
-      Objects.requireNonNull(featureLookupManager, "Missing required fields: featureLookupManager");
+      FeatureLookupManager internalLookupManager = Objects.requireNonNull(featureLookupManager, "Missing required fields: featureLookupManager");
       configuration = Objects.requireNonNullElse(configuration, ImmutableFeatureManagerConfiguration.builder().build());
       cacheBuilder = Objects.requireNonNullElse(cacheBuilder, getDefaultCacheBuilder());
-      return new FeatureManager(this);
+
+      for (Decorator<FeatureLookupManager> decorator : featureLookupManagerDecorator) {
+        LOGGER.info("Decorating featureLookupManager with {}", decorator);
+        internalLookupManager = decorator.decorate(internalLookupManager);
+      }
+
+      FeatureManager featureManager = new FeatureManagerImpl(this);
+      for (Decorator<FeatureManager> decorator : featureManagerDecorator) {
+        LOGGER.info("Decorating featureManager with {}", decorator);
+        featureManager = decorator.decorate(featureManager);
+      }
+      return featureManager;
+    }
+
+    /**
+     * Gets enablement factory.
+     *
+     * @return the enablement factory
+     */
+    public EnablementFactory getEnablementFactory() {
+      return enablementFactory;
+    }
+
+    /**
+     * Gets feature lookup manager.
+     *
+     * @return the feature lookup manager
+     */
+    public FeatureLookupManager getFeatureLookupManager() {
+      return featureLookupManager;
+    }
+
+    /**
+     * Gets configuration.
+     *
+     * @return the configuration
+     */
+    public FeatureManagerConfiguration getConfiguration() {
+      return configuration;
+    }
+
+    /**
+     * Gets cache builder.
+     *
+     * @return the cache builder
+     */
+    public CacheBuilder<String, Enablement> getCacheBuilder() {
+      return cacheBuilder;
     }
   }
 

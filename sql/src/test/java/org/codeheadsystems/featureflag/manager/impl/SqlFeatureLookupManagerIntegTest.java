@@ -8,10 +8,19 @@ import org.jdbi.v3.core.Jdbi;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
+/**
+ * The type Sql feature lookup manager integ test.
+ */
 public class SqlFeatureLookupManagerIntegTest extends FeatureLookupManagerIntegTest {
 
+  /**
+   * The Jdbi.
+   */
   protected Jdbi jdbi;
 
+  /**
+   * Sets jdbi.
+   */
   @BeforeEach
   void setupJdbi() {
     jdbi = Jdbi.create("jdbc:hsqldb:mem:" + getClass().getSimpleName() + ":" + UUID.randomUUID(), "SA", "");
@@ -24,6 +33,9 @@ public class SqlFeatureLookupManagerIntegTest extends FeatureLookupManagerIntegT
     });
   }
 
+  /**
+   * Close jdbi.
+   */
   @AfterEach
   void closeJdbi() {
     jdbi = null;
