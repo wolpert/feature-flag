@@ -56,24 +56,11 @@ public class FeatureManagerImpl implements FeatureManager {
   }
 
   /**
-   * If enabled else t.
-   *
-   * @param <T>           the type parameter
-   * @param featureId     the feature id
-   * @param discriminator the discriminator
-   * @param ifEnabled     the if enabled
-   * @param ifDisabled    the if disabled
-   * @return the t
-   */
-  public <T> T ifEnabledElse(String featureId, String discriminator, Supplier<T> ifEnabled, Supplier<T> ifDisabled) {
-    return isEnabled(featureId, discriminator) ? ifEnabled.get() : ifDisabled.get();
-  }
-
-  /**
    * Invalidate the feature id in the cache.
    *
    * @param featureId the feature id
    */
+  @Override
   public void invalidate(String featureId) {
     featureEnablementCache.invalidate(featureId);
   }

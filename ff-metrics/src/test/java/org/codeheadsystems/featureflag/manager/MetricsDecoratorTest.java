@@ -20,7 +20,7 @@ class MetricsDecoratorTest {
   public void testDecorate() {
     FeatureManager.Builder builder = new FeatureManager.Builder();
     builder.withFeatureManagerDecorator(metricsDecorator.featureManagerDecorator());
-    builder.featureLookupManagerDecorator(metricsDecorator.featureLookupManagerDecorator());
+    builder.withFeatureLookupManagerDecorator(metricsDecorator.featureLookupManagerDecorator());
   }
 
 

@@ -11,4 +11,4 @@ plugins {
 }
 
 rootProject.name = "feature-flag"
-include("ff", "test", "etcd", "ddb", "ddb-test", "sql", "metrics")
+include("ff", "ff-metrics", "test", "etcd", "ddb", "ddb-test", "sql", "integ")

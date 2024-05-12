@@ -52,7 +52,6 @@ java {
     withSourcesJar()
 }
 
-
 tasks.named<Test>("test") {
     useJUnitPlatform()
 }

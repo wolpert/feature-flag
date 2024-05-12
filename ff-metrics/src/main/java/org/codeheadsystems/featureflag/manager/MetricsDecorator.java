@@ -32,18 +32,28 @@ public class MetricsDecorator {
    * @return the decorator
    */
   public Decorator<FeatureManager> featureManagerDecorator() {
-    return (featureManager) -> {
-      LOGGER.info("decorateFeatureManager({})", featureManager);
+    return (delegate) -> {
+      LOGGER.info("decorateFeatureManager({})", delegate);
       return new FeatureManager() {
         @Override
         public boolean isEnabled(String featureId, String discriminator) {
-          final boolean isEnabled = featureManager.isEnabled(featureId, discriminator);
+          final boolean isEnabled = delegate.isEnabled(featureId, discriminator);
           final Tags tags = Tags.of(
               "feature", featureId,
               "discriminator", discriminator,
               "enabled", Boolean.toString(isEnabled));
           metrics.counter("feature_flag_isEnabled", tags);
           return isEnabled;
+        }
+
+        @Override
+        public void invalidate(final String featureId) {
+          metrics.time("feature_flag_invalidate",
+              Tags.of("feature", featureId),
+              () -> {
+                delegate.invalidate(featureId);
+                return null;
+              });
         }
       };
     };
@@ -55,21 +65,21 @@ public class MetricsDecorator {
    * @return the decorator
    */
   public Decorator<FeatureLookupManager> featureLookupManagerDecorator() {
-    return (featureLookupManager) -> {
-      LOGGER.info("decorateFeatureLookupManager({})", featureLookupManager);
+    return (delegate) -> {
+      LOGGER.info("decorateFeatureLookupManager({})", delegate);
       return new FeatureLookupManager() {
         @Override
         public Optional<Double> lookupPercentage(String featureId) {
           return metrics.time("feature_flag_lookup",
               Tags.of("feature", featureId),
-              () -> featureLookupManager.lookupPercentage(featureId));
+              () -> delegate.lookupPercentage(featureId));
         }
 
         @Override
         public boolean setPercentage(String featureId, double percentage) {
           return metrics.time("feature_flag_setPercentage",
               Tags.of("feature", featureId),
-              () -> featureLookupManager.setPercentage(featureId, percentage));
+              () -> delegate.setPercentage(featureId, percentage));
         }
 
         @Override
@@ -77,7 +87,7 @@ public class MetricsDecorator {
           metrics.time("feature_flag_deletePercentage",
               Tags.of("feature", featureId),
               () -> {
-                featureLookupManager.deletePercentage(featureId);
+                delegate.deletePercentage(featureId);
                 return null;
               });
         }

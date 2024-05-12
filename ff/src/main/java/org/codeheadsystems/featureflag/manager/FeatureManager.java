@@ -5,6 +5,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
 import org.codeheadsystems.featureflag.factory.Enablement;
 import org.codeheadsystems.featureflag.factory.EnablementFactory;
 import org.codeheadsystems.featureflag.manager.impl.FeatureManagerImpl;
@@ -26,6 +27,28 @@ public interface FeatureManager {
    * @return the boolean
    */
   boolean isEnabled(String featureId, String discriminator);
+
+
+  /**
+   * If enabled else t.
+   *
+   * @param <T>           the type parameter
+   * @param featureId     the feature id
+   * @param discriminator the discriminator
+   * @param ifEnabled     the if enabled
+   * @param ifDisabled    the if disabled
+   * @return the t
+   */
+  default <T> T ifEnabledElse(String featureId, String discriminator, Supplier<T> ifEnabled, Supplier<T> ifDisabled) {
+    return isEnabled(featureId, discriminator) ? ifEnabled.get() : ifDisabled.get();
+  }
+
+  /**
+   * Invalidate the feature id in the cache.
+   *
+   * @param featureId the feature id
+   */
+  void invalidate(String featureId);
 
   /**
    * The interface Decorator.
@@ -83,7 +106,7 @@ public interface FeatureManager {
      * @param decorator the decorator
      * @return the builder
      */
-    public Builder featureLookupManagerDecorator(Decorator<FeatureLookupManager> decorator) {
+    public Builder withFeatureLookupManagerDecorator(Decorator<FeatureLookupManager> decorator) {
       featureLookupManagerDecorator.add(decorator);
       return this;
     }
@@ -138,8 +161,8 @@ public interface FeatureManager {
      * @return the feature manager
      */
     public FeatureManager build() {
-      Objects.requireNonNull(enablementFactory, "Missing required fields: enablementFactory");
       FeatureLookupManager internalLookupManager = Objects.requireNonNull(featureLookupManager, "Missing required fields: featureLookupManager");
+      enablementFactory = Objects.requireNonNullElse(enablementFactory, new EnablementFactory());
       configuration = Objects.requireNonNullElse(configuration, ImmutableFeatureManagerConfiguration.builder().build());
       cacheBuilder = Objects.requireNonNullElse(cacheBuilder, getDefaultCacheBuilder());
 

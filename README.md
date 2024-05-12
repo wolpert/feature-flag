@@ -21,12 +21,41 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.codeheadsystems:feature-flag:1.0.3'
-    implementation 'com.codeheadsystems:feature-flag-etcd:1.0.3'
-    implementation 'com.codeheadsystems:feature-flag-ddb:1.0.3'
-    implementation 'com.codeheadsystems:feature-flag-sql:1.0.3'
-    implementation 'com.codeheadsystems:feature-flag-metrics:1.0.3'
+    implementation 'com.codeheadsystems:feature-flag:1.0.4'
+    implementation 'com.codeheadsystems:feature-flag-etcd:1.0.4'
+    implementation 'com.codeheadsystems:feature-flag-ddb:1.0.4'
+    implementation 'com.codeheadsystems:feature-flag-sql:1.0.4'
+    implementation 'com.codeheadsystems:feature-flag-metrics:1.0.4'
 }
+```
+
+## Sample Code
+
+### DynamoDB usage example
+```java
+  void setupDynamoDB(Metrics metrics, DynamoDbClient dbClient) {
+    MetricsDecorator metricsDecorator = new MetricsDecorator(metrics);
+    DynamoDbConfiguration dbConfiguration = ImmutableDynamoDbConfiguration.builder().build();
+    featureManager = new FeatureManager.Builder()
+        .withFeatureManagerDecorator(metricsDecorator.featureManagerDecorator())
+        .withFeatureLookupManagerDecorator(metricsDecorator.featureLookupManagerDecorator())
+        .withFeatureLookupManager(new DdbFeatureLookupManager(dbConfiguration, dbClient))
+        .build();
+  }
+
+  String calculateResult(String customerId) {
+    if (featureManager.isEnabled("updatedCalculation", customerId)) {
+      return existingProcess(customerId);
+    } else {
+      return newProcess(customerId);
+    }
+  }
+
+  String calculateResultCallables(String customerId) {
+    return featureManager.ifEnabledElse("updatedCalculation", customerId,
+        () -> existingProcess(customerId),
+        () -> newProcess(customerId));
+  }
 ```
 
 ## Notes
