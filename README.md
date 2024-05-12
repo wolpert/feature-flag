@@ -21,11 +21,18 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.codeheadsystems:feature-flag:1.0.1'
-    implementation 'com.codeheadsystems:feature-flag-etcd:1.0.1'
-    implementation 'com.codeheadsystems:feature-flag-ddb:1.0.1'
+    implementation 'com.codeheadsystems:feature-flag:1.0.3'
+    implementation 'com.codeheadsystems:feature-flag-etcd:1.0.3'
+    implementation 'com.codeheadsystems:feature-flag-ddb:1.0.3'
+    implementation 'com.codeheadsystems:feature-flag-sql:1.0.3'
+    implementation 'com.codeheadsystems:feature-flag-metrics:1.0.3'
 }
 ```
+
+## Notes
+* SQL support just started, should work but not completely tested.
+* Metrics here use the base metrics library from CodeHead. I may optimize them more.
+* The use of the builder is now required. FeatureManager.Builder class should be used.
 
 ## Why not use an existing library?
 
@@ -40,4 +47,3 @@ jars internally.
 
 ## TODO
 1. Generic CLI would be nice.
-2. Add in SQL support.
