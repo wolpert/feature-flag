@@ -50,6 +50,13 @@ class EnablementManagerTest {
   }
 
   @Test
+  void isEnabled_errorThrown() {
+    when(featureLookupManager.lookupPercentage(FEATURE_ID)).thenThrow(new RuntimeException("error"));
+
+    assertThat(featureManager.isEnabled(FEATURE_ID, DISCRIMINATOR)).isFalse();
+  }
+
+  @Test
   void ifEnabledElse_enabled() {
     when(featureLookupManager.lookupPercentage(FEATURE_ID)).thenReturn(Optional.of(0.5));
     when(enablementFactory.generate(0.5)).thenReturn(discriminator -> true);

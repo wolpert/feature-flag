@@ -2,7 +2,8 @@ package org.codeheadsystems.featureflag.manager.impl;
 
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import java.util.function.Supplier;
+import com.google.common.util.concurrent.UncheckedExecutionException;
+import java.util.concurrent.ExecutionException;
 import org.codeheadsystems.featureflag.factory.Enablement;
 import org.codeheadsystems.featureflag.factory.EnablementFactory;
 import org.codeheadsystems.featureflag.manager.FeatureLookupManager;
@@ -52,7 +53,12 @@ public class FeatureManagerImpl implements FeatureManager {
    */
   @Override
   public boolean isEnabled(String featureId, String discriminator) {
-    return featureEnablementCache.getUnchecked(featureId).enabled(discriminator);
+    try {
+      return featureEnablementCache.get(featureId).enabled(discriminator);
+    } catch (ExecutionException | UncheckedExecutionException e) {
+      LOGGER.error("Error getting feature enablement for: {}:{}", featureId, discriminator, e);
+      return false;
+    }
   }
 
   /**
