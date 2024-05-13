@@ -4,7 +4,7 @@
 [versions]
 assertj = "3.25.3"
 awsSDK2 = "2.25.50"
-codehead-database-test = "1.0.3"
+codehead-database-test = "1.0.5"
 codehead-metrics = "1.0.4"
 guava = "33.2.0-jre"
 ddblocal = "2.4.0"
