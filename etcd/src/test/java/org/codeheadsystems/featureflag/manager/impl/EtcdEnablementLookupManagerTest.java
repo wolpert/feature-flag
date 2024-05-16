@@ -1,6 +1,7 @@
 package org.codeheadsystems.featureflag.manager.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.codeheadsystems.featureflag.manager.impl.EtcdFeatureLookupManager.NAMESPACE;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -85,6 +86,24 @@ class EtcdEnablementLookupManagerTest {
   }
 
   @Test
+  void lookupPercentage_interrupted() throws ExecutionException, InterruptedException, TimeoutException {
+    when(client.getKVClient()).thenReturn(kv);
+    when(kv.get(getNamespaceKeyBytes())).thenReturn(getResponseCompletableFuture);
+    when(getResponseCompletableFuture.get(100, TimeUnit.MILLISECONDS)).thenThrow(new InterruptedException());
+    assertThatExceptionOfType(IllegalArgumentException.class)
+        .isThrownBy(() -> etcdFeatureLookupManager.lookupPercentage(FEATURE_ID));
+  }
+
+  @Test
+  void lookupPercentage_executionException() throws ExecutionException, InterruptedException, TimeoutException {
+    when(client.getKVClient()).thenReturn(kv);
+    when(kv.get(getNamespaceKeyBytes())).thenReturn(getResponseCompletableFuture);
+    when(getResponseCompletableFuture.get(100, TimeUnit.MILLISECONDS)).thenThrow(new ExecutionException("", new Exception()));
+    assertThatExceptionOfType(IllegalArgumentException.class)
+        .isThrownBy(() -> etcdFeatureLookupManager.lookupPercentage(FEATURE_ID));
+  }
+
+  @Test
   void setPercentage() throws ExecutionException, InterruptedException {
     when(client.getKVClient()).thenReturn(kv);
     when(kv.put(byteSequenceArgumentCaptor.capture(), byteSequenceArgumentCaptor.capture())).thenReturn(putResponseCompletableFuture);
@@ -96,6 +115,24 @@ class EtcdEnablementLookupManagerTest {
   }
 
   @Test
+  void setPercentage_interrupted() throws ExecutionException, InterruptedException {
+    when(client.getKVClient()).thenReturn(kv);
+    when(kv.put(byteSequenceArgumentCaptor.capture(), byteSequenceArgumentCaptor.capture())).thenReturn(putResponseCompletableFuture);
+    when(putResponseCompletableFuture.get()).thenThrow(new InterruptedException());
+    assertThatExceptionOfType(IllegalArgumentException.class)
+        .isThrownBy(() -> etcdFeatureLookupManager.setPercentage(FEATURE_ID, 0.5));
+  }
+
+  @Test
+  void setPercentage_executionException() throws ExecutionException, InterruptedException {
+    when(client.getKVClient()).thenReturn(kv);
+    when(kv.put(byteSequenceArgumentCaptor.capture(), byteSequenceArgumentCaptor.capture())).thenReturn(putResponseCompletableFuture);
+    when(putResponseCompletableFuture.get()).thenThrow(new ExecutionException("", new Exception()));
+    assertThatExceptionOfType(IllegalArgumentException.class)
+        .isThrownBy(() -> etcdFeatureLookupManager.setPercentage(FEATURE_ID, 0.5));
+  }
+
+  @Test
   void deletePercentage() throws ExecutionException, InterruptedException {
     when(client.getKVClient()).thenReturn(kv);
     when(kv.delete(byteSequenceArgumentCaptor.capture())).thenReturn(deleteResponseCompletableFuture);
@@ -104,4 +141,23 @@ class EtcdEnablementLookupManagerTest {
     List<String> values = byteSequenceArgumentCaptor.getAllValues().stream().map(Objects::toString).collect(Collectors.toList());
     assertThat(values).containsExactly(PREAMBLE + "_" + NAMESPACE + "/" + FEATURE_ID);
   }
+
+  @Test
+  void deletePercentage_interrupted() throws ExecutionException, InterruptedException {
+    when(client.getKVClient()).thenReturn(kv);
+    when(kv.delete(byteSequenceArgumentCaptor.capture())).thenReturn(deleteResponseCompletableFuture);
+    when(deleteResponseCompletableFuture.get()).thenThrow(new InterruptedException());
+    assertThatExceptionOfType(IllegalArgumentException.class)
+        .isThrownBy(() -> etcdFeatureLookupManager.deletePercentage(FEATURE_ID));
+  }
+
+  @Test
+  void deletePercentage_executionException() throws ExecutionException, InterruptedException {
+    when(client.getKVClient()).thenReturn(kv);
+    when(kv.delete(byteSequenceArgumentCaptor.capture())).thenReturn(deleteResponseCompletableFuture);
+    when(deleteResponseCompletableFuture.get()).thenThrow(new ExecutionException("", new Exception()));
+    assertThatExceptionOfType(IllegalArgumentException.class)
+        .isThrownBy(() -> etcdFeatureLookupManager.deletePercentage(FEATURE_ID));
+  }
+
 }
