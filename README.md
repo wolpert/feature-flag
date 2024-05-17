@@ -15,17 +15,19 @@ a consistent way. Provides for the following:
 
 All libraries are available on maven central.
 
+## Note, 1.0.5 is a bad build. Will have 1.0.6 shortly.
+
 ```groovy
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation 'com.codeheadsystems:feature-flag:1.0.5'
-    implementation 'com.codeheadsystems:feature-flag-etcd:1.0.5'
-    implementation 'com.codeheadsystems:feature-flag-ddb:1.0.5'
-    implementation 'com.codeheadsystems:feature-flag-sql:1.0.5'
-    implementation 'com.codeheadsystems:feature-flag-metrics:1.0.5'
+    implementation 'com.codeheadsystems:feature-flag:1.0.4'
+    implementation 'com.codeheadsystems:feature-flag-etcd:1.0.4'
+    implementation 'com.codeheadsystems:feature-flag-ddb:1.0.4'
+    implementation 'com.codeheadsystems:feature-flag-sql:1.0.4'
+    implementation 'com.codeheadsystems:feature-flag-metrics:1.0.4'
 }
 ```
 
