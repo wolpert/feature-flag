@@ -15,7 +15,7 @@ a consistent way. Provides for the following:
 
 All libraries are available on maven central.
 
-## Note, 1.0.5 is a bad build. Will have 1.0.6 shortly.
+## Note, 1.0.5 is a bad build. Use 1.0.4 until 1.0.6 is available
 
 ```groovy
 repositories {
@@ -23,11 +23,11 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.codeheadsystems:feature-flag:1.0.4'
-    implementation 'com.codeheadsystems:feature-flag-etcd:1.0.4'
-    implementation 'com.codeheadsystems:feature-flag-ddb:1.0.4'
-    implementation 'com.codeheadsystems:feature-flag-sql:1.0.4'
-    implementation 'com.codeheadsystems:feature-flag-metrics:1.0.4'
+    implementation 'com.codeheadsystems:feature-flag:1.0.6'
+    implementation 'com.codeheadsystems:feature-flag-etcd:1.0.6'
+    implementation 'com.codeheadsystems:feature-flag-ddb:1.0.6'
+    implementation 'com.codeheadsystems:feature-flag-sql:1.0.6'
+    implementation 'com.codeheadsystems:feature-flag-metrics:1.0.6'
 }
 ```
 

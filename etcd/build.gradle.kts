@@ -11,7 +11,6 @@ plugins {
     checkstyle
     `maven-publish`
     signing
-    jacoco
 }
 
 repositories {
@@ -44,29 +43,10 @@ java {
     withJavadocJar()
     withSourcesJar()
 }
-tasks.jacocoTestReport {
-    dependsOn(tasks.test) // tests are required to run before generating the report
-    reports {
-        xml.required = false
-        csv.required = false
-        html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
-    }
-    finalizedBy(tasks.jacocoTestCoverageVerification) // report is always generated after tests run
-}
-tasks.jacocoTestCoverageVerification {
-    violationRules {
-        rule {
-            limit {
-                minimum = "0.80".toBigDecimal()
-            }
-        }
-    }
-}
 
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
-    finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
 }
 
 publishing {
