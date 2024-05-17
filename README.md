@@ -21,11 +21,11 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.codeheadsystems:feature-flag:1.0.4'
-    implementation 'com.codeheadsystems:feature-flag-etcd:1.0.4'
-    implementation 'com.codeheadsystems:feature-flag-ddb:1.0.4'
-    implementation 'com.codeheadsystems:feature-flag-sql:1.0.4'
-    implementation 'com.codeheadsystems:feature-flag-metrics:1.0.4'
+    implementation 'com.codeheadsystems:feature-flag:1.0.5'
+    implementation 'com.codeheadsystems:feature-flag-etcd:1.0.5'
+    implementation 'com.codeheadsystems:feature-flag-ddb:1.0.5'
+    implementation 'com.codeheadsystems:feature-flag-sql:1.0.5'
+    implementation 'com.codeheadsystems:feature-flag-metrics:1.0.5'
 }
 ```
 
