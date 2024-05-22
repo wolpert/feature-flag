@@ -3,7 +3,7 @@
 
 [versions]
 assertj = "3.25.3"
-awsSDK2 = "2.25.56"
+awsSDK2 = "2.25.57"
 codehead-database-test = "1.0.5"
 codehead-metrics = "1.0.4"
 guava = "33.2.0-jre"
