@@ -35,7 +35,7 @@ dependencies {
     testImplementation(project(":test"))
     testImplementation(libs.bundles.logback)
     testImplementation(libs.bundles.testing)
-    testImplementation(libs.database.test)
+    //testImplementation(libs.database.test)
 
     testImplementation(libs.liquibase.core)
     testImplementation(libs.hsqldb)
@@ -45,7 +45,7 @@ dependencies {
 // Apply a specific Java toolchain to ease working on different environments.
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(11)
+        languageVersion = JavaLanguageVersion.of(21)
     }
     withJavadocJar()
     withSourcesJar()
