@@ -2,7 +2,7 @@
 # https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
 
 [versions]
-assertj = "3.25.3"
+assertj = "3.26.0"
 awsSDK2 = "2.25.59"
 codehead-database-test = "1.0.5"
 codehead-metrics = "1.0.4"
