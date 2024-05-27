@@ -15,8 +15,6 @@ a consistent way. Provides for the following:
 
 All libraries are available on maven central.
 
-## Note, 1.0.5 is a bad build. Use 1.0.4 until 1.0.6 is available
-
 ```groovy
 repositories {
     mavenCentral()
@@ -72,9 +70,7 @@ dependencies {
 
 ## Java Version Notice
 
-These libraries are compiled with Java 21 but supports class files for Java 11.
-However, DynamoDB requires Java 17 for testing due to using DynamoDBLocal
-jars internally.
+These libraries require Java 21.
 
 ## TODO
 1. Generic CLI would be nice.
