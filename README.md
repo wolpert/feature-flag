@@ -8,26 +8,21 @@ a consistent way. Provides for the following:
 * Ability to dial up a percentage of traffic based on a common identifier.
 * Dial up is consistent. (At x% dial up, the same identifier will consistent be enabled or disabled)
 
-## Status
+## Repository Status
 ![Feature-Flag Build](https://github.com/wolpert/feature-flag/actions/workflows/gradle.yml/badge.svg)
 
 ## Installation
 
 All libraries are available on maven central.
 
-```groovy
-repositories {
-    mavenCentral()
-}
+| Library              | Purpose                           | Version                              |
+|----------------------|-----------------------------------|---------------------------------------------------------------|
+| feature-flag         | Core Library                      | ![feature-flag](https://img.shields.io/maven-central/v/com.codeheadsystems/feature-flag)         |
+| feature-flag-ddb     | DynamoDB backend                  | ![feature-flag](https://img.shields.io/maven-central/v/com.codeheadsystems/feature-flag-ddb)     |
+| feature-flag-sql     | SQL backend                       | ![feature-flag](https://img.shields.io/maven-central/v/com.codeheadsystems/feature-flag-sql)     | 
+| feature-flag-etcd    | etcd backend                      | ![feature-flag](https://img.shields.io/maven-central/v/com.codeheadsystems/feature-flag-etcd)    |
+| feature-flag-metrics | metrics integration               | ![feature-flag](https://img.shields.io/maven-central/v/com.codeheadsystems/feature-flag-metrics) |
 
-dependencies {
-    implementation 'com.codeheadsystems:feature-flag:1.0.6'
-    implementation 'com.codeheadsystems:feature-flag-etcd:1.0.6'
-    implementation 'com.codeheadsystems:feature-flag-ddb:1.0.6'
-    implementation 'com.codeheadsystems:feature-flag-sql:1.0.6'
-    implementation 'com.codeheadsystems:feature-flag-metrics:1.0.6'
-}
-```
 
 ## Sample Code
 
