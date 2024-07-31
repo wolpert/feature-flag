@@ -1,7 +1,7 @@
 package org.codeheadsystems.featureflag.manager;
 
 import com.codeheadsystems.metrics.Metrics;
-import io.micrometer.core.instrument.Tags;
+import com.codeheadsystems.metrics.Tags;
 import java.util.Optional;
 import org.codeheadsystems.featureflag.manager.FeatureManager.Decorator;
 import org.slf4j.Logger;
@@ -42,7 +42,7 @@ public class MetricsDecorator {
               "feature", featureId,
               "discriminator", discriminator,
               "enabled", Boolean.toString(isEnabled));
-          metrics.counter("feature_flag_isEnabled", tags);
+          metrics.increment("feature_flag_isEnabled", tags);
           return isEnabled;
         }
 
