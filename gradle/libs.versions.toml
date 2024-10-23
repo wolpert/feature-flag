@@ -3,7 +3,7 @@
 
 [versions]
 assertj = "3.26.3"
-awsSDK2 = "2.28.23"
+awsSDK2 = "2.28.28"
 codehead-database-test = "1.0.8"
 codehead-metrics = "2.0.8"
 guava = "33.3.1-jre"
@@ -12,7 +12,7 @@ hsqldb = '2.7.3'
 immutables = '2.10.1'
 jetcd = "0.8.3"
 jdbi = '3.46.0'
-junit-jupiter = "5.11.2"
+junit-jupiter = "5.11.3"
 liquibase = '4.29.2'
 micrometer = '1.13.6'
 metrics = '4.2.28'
@@ -20,7 +20,7 @@ mokito = '5.14.2'
 logback = '1.5.11'
 pgjdbc = '42.7.4'
 slf4j = '2.0.16'
-testcontainers = '1.20.2'
+testcontainers = '1.20.3'
 
 [libraries]
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
