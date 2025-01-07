@@ -2,8 +2,8 @@
 # https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
 
 [versions]
-assertj = "3.27.0"
-awsSDK2 = "2.29.43"
+assertj = "3.27.2"
+awsSDK2 = "2.29.46"
 codehead-database-test = "1.0.9"
 codehead-metrics = "2.0.10"
 guava = "33.4.0-jre"
@@ -16,8 +16,8 @@ junit-jupiter = "5.11.4"
 liquibase = '4.30.0'
 micrometer = '1.14.2'
 metrics = '4.2.29'
-mokito = '5.14.2'
-logback = '1.5.15'
+mokito = '5.15.2'
+logback = '1.5.16'
 pgjdbc = '42.7.4'
 slf4j = '2.0.16'
 testcontainers = '1.20.4'
