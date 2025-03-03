@@ -1,4 +1,7 @@
 # Feature Flag
+
+# NOTE: ARCHIVED AND THIS IS MOVED TO https://github.com/wolpert/libraries
+
 A minor implementation of Fowler's [feature toggle](https://martinfowler.com/articles/feature-toggles.html) 
 designed for enabling and dialing up a feature for a percentage of traffic in
 a consistent way. Provides for the following:
